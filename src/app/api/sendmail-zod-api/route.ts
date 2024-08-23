@@ -1,3 +1,28 @@
+// Use this api to send mail to single to, cc and bcc recepients.
+// Uses Zod validation
+// --------------------------------------------------------------------------
+// Place the following lines in .env.local folder
+// NEXT_PUBLIC_EMAIL_USERNAME = admin@auralsystems.com
+// NEXT_PUBLIC_EMAIL_PASSWORD = 26-Jan-1947
+// NEXT_PUBLIC_PERSONAL_EMAIL = ashokkumarsingh@gmail.com
+//----------------------------------------------------------------------------
+// Field descriptions from https://nodemailer.com/message/
+// from: The email address of the sender. All email addresses can be 
+// plain ‘sender@server.com’ or formatted '“Sender Name” sender@server.com
+// to: Comma separated list or an array of recipients email addresses that 
+// will appear on the "To:"" field.
+// cc: Comma separated list or an array of recipients email addresses that will 
+// appear on the "Cc:"" field
+// bcc: Comma separated list or an array of recipients email addresses that will 
+// appear on the "Bcc:" field
+// subject: Text of the subject of the email 
+// text: The plaintext version of the message as an Unicode string, Buffer, 
+// Stream or an attachment-like object ({path: ‘/var/data/…'})
+// html: The HTML version of the message as an Unicode string, Buffer, Stream 
+// or an attachment-like object ({path: ‘http://…'})
+// attachments - An array of attachment objects
+
+
 import process from "process";
 
 import { NextResponse, NextRequest } from "next/server";
@@ -33,7 +58,7 @@ export async function POST(request: NextRequest, response: NextResponse) {
       name +
       ", Email: " +
       email +
-      "CC: " +
+      ", CC: " +
       ccemail +
       ", BCC: " +
       bccemail +
@@ -64,9 +89,11 @@ export async function POST(request: NextRequest, response: NextResponse) {
     const mail = await transporter.sendMail({
       from: username, // Sender's email
       to: username, // Primary recipient's email
-      replyTo: email, // email header field that specifies the address to which recipients should reply.
+      replyTo: username, // An email address that will appear on the "Reply-To:" field
+      // i.e. This field specifies the address to which recipients should reply.
       // subject: `Website activity from ${email}`, // Subject of the email
       subject: `Subject: ${subject}`, // Subject of the email
+      text: "Plaintext version of the message",
       html: `
         <p>Name: ${name} </p>
         <p>Email: ${email} </p>
@@ -74,10 +101,10 @@ export async function POST(request: NextRequest, response: NextResponse) {
         <p>Email(bcc): ${bccemail} </p>
         <p>Message: ${message} </p>
         `,
-      // cc: [], // CC recipients
-      // bcc: [], // BCC recipients
-      cc: ["ashokkumarsingh@gmail.com", "ashokkumarsingh@gmail.com"], // CC recipients
-      bcc: ["ashokkumarsingh@gmail.com", "ashokkumarsingh@gmail.com"], // BCC recipients
+        cc: ccemail,
+        bcc: bccemail,
+      // cc: ["abcd@gmail.com", "efgh@gmail.com"], // CC recipients
+      // bcc: ["ijkl@gmail.com", "mnop@gmail.com"], // BCC recipients
     });
 
     return NextResponse.json({ message: "Success: Email was sent" });

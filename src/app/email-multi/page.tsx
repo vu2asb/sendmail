@@ -1,3 +1,7 @@
+/* This page.tsx file creates a form to accept multiple email addresses 
+for the to, cc and bcc fields on the form. 
+NOTE: This version provides no validation of any of the form field.
+*/
 "use client";
 import { FormEvent } from "react";
 import Link from "next/link";
@@ -9,7 +13,7 @@ export default function Contact() {
     const formData = new FormData(event.currentTarget);
     try {
       console.log("Note: sendmail api call with POST method");
-      const response = await fetch("http://localhost:3000/api/sendmail", {
+      const response = await fetch("http://localhost:3000/api/sendmail-multi-api", {
         method: "POST",
         body: formData,
       });
@@ -33,7 +37,9 @@ export default function Contact() {
       <div className="relative flex place-items-center p-5 bg-white text-black">
         <Link href="/">Home</Link>
       </div>
-
+      <h2 className="text-2xl mt-10">
+        Multiple To, CC and BCC Recepients
+      </h2>
       <form
         onSubmit={handleSubmit}
         className="mt-8 mb-2 w-80 max-w-screen-lg sm:w-96"
@@ -49,7 +55,7 @@ export default function Contact() {
             className="text-black"
           />
 
-          <label htmlFor="form-email"> Email:</label>
+          <label htmlFor="form-email"> Email (comma-separated):</label>
           <input
             id="form-email"
             required
