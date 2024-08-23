@@ -88,7 +88,7 @@ export async function POST(request: NextRequest, response: NextResponse) {
   try {
     const mail = await transporter.sendMail({
       from: username, // Sender's email
-      to: username, // Primary recipient's email
+      to: email, // Primary recipient's email
       replyTo: username, // An email address that will appear on the "Reply-To:" field
       // i.e. This field specifies the address to which recipients should reply.
       // subject: `Website activity from ${email}`, // Subject of the email

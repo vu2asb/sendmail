@@ -1,6 +1,6 @@
-/* This page.tsx file creates a form to single email addresses 
+/* This page.tsx file creates a form to accept multiple email addresses 
 for the to, cc and bcc fields on the form. 
-NOTE: This version provides Zod validation for all form field.
+NOTE: This version provides zod validation for all the form fields.
 */
 "use client";
 import { FormEvent } from "react";
@@ -13,10 +13,13 @@ export default function Contact() {
     const formData = new FormData(event.currentTarget);
     try {
       console.log("Note: sendmail api call with POST method");
-      const response = await fetch("http://localhost:3000/api/sendmail-zod-api", {
-        method: "POST",
-        body: formData,
-      });
+      const response = await fetch(
+        "http://localhost:3000/api/sendmail-zod-api",
+        {
+          method: "POST",
+          body: formData,
+        }
+      );
 
       if (!response.ok) {
         console.log("falling over");
@@ -37,8 +40,9 @@ export default function Contact() {
       <div className="relative flex place-items-center p-5 bg-white text-black">
         <Link href="/">Home</Link>
       </div>
-      <h2 className="text-2xl mt-10">
-        Single To, CC and BCC Recepients
+      <h2 className="text-2xl mt-10">Zod verified</h2>
+      <h2 className="text-1xl font-bold mt-2 text-red-500">
+        Enter only one address in To, CC and BCC fields
       </h2>
       <form
         onSubmit={handleSubmit}
@@ -55,7 +59,7 @@ export default function Contact() {
             className="text-black"
           />
 
-          <label htmlFor="form-email"> Email (comma-separated):</label>
+          <label htmlFor="form-email"> Email:</label>
           <input
             id="form-email"
             required
@@ -81,7 +85,7 @@ export default function Contact() {
             rows={5}
             className="text-black"
           />
-          <label htmlFor="form-cc"> CC Emails (comma-separated): </label>
+          <label htmlFor="form-cc"> CC Emails: </label>
           <textarea
             id="form-cc"
             name="email_cc_recipient"
@@ -89,7 +93,7 @@ export default function Contact() {
             rows={1}
             className="text-black"
           />
-          <label htmlFor="form-bcc"> BCC Emails (comma-separated): </label>
+          <label htmlFor="form-bcc"> BCC Emails: </label>
           <textarea
             id="form-bcc"
             name="email_bcc_recipient"
@@ -98,9 +102,11 @@ export default function Contact() {
             className="text-black"
           />
         </div>
-        <button className=" rounded bg-sky-400" type="submit">
-          Send Mail
-        </button>
+        <div className="">
+          <button className="rounded bg-blue-200 m- p-2" type="submit">
+            Send Mail(s)
+          </button>
+        </div>
       </form>
     </main>
   );
