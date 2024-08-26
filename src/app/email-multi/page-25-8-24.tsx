@@ -6,10 +6,8 @@ NOTE: This version provides no validation of any of the form field.
 import { FormEvent } from "react";
 import Link from "next/link";
 import Swal from "sweetalert2";
-import { useRouter } from "next/router";
 
 export default function Contact() {
-  var debug = false; // true = show console.log messages; false don't show
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     console.log("Submit button clicked");
@@ -23,10 +21,9 @@ export default function Contact() {
           body: formData,
         }
       );
+
       if (!response.ok) {
-        if (debug) {
-          alert("MA-100: API fetch call failed");
-        }
+        console.log("falling over");
         Swal.fire({
           title: "Oops...",
           imageUrl: "https://unsplash.it/450/250",
@@ -37,60 +34,28 @@ export default function Contact() {
           <h3 style="font-size: 1.5em; margin-bottom: 8px;">Sorry!</h3>
           <h4 style="font-size: 1.3em; margin-bottom: 6px;">Your mail could not be sent</h4>
           <h5 style="font-size: 1em; margin-bottom: 8px;">Please try after some time</h5>
-          <h6 style="font-size: 0.8em; margin-bottom: 5px; color: green;">[MA-100]</h6>
+          <h6 style="font-size: 0.8em; margin-bottom: 5px; color: red;">[IN-100]</h6>
             `,
-          footer:
-            '<a style="color: blue;" href="#">Why do I have this issue?</a>',
+          footer: '<a style="color: blue;" href="#">Why do I have this issue?</a>',
           confirmButtonText: "Continue",
         });
-        //---------swal ends----------
-        // Need to exit the page. Force refresh the page
-        const router = useRouter();
-        router.reload();
-      } else {
-        const responseData = await response.json();
-        if (debug) {
-          alert("API fetch worked");
-          console.log("On success Response Data: ");
-          console.log(responseData["message"]);
-        }
 
-        Swal.fire({
-          position: "top-end",
-          icon: "success",
-          title: "Your mail has been sent",
-          showConfirmButton: false,
-          timer: 2000,
-        });
-        //---------swal ends----------
+        throw new Error(`response status: ${response.status}`);
       }
-    } catch (err) {
-      //fetch api failed
-      if (debug) {
-        console.error(err);
-        alert("MA-101: API fetch call failed. Reason/Details: " + err + "");
-      }
+      const responseData = await response.json();
+      console.log(responseData["message"]);
 
+      // alert("Message successfully sent");
       Swal.fire({
-        title: "Oops...",
-        imageUrl: "https://unsplash.it/450/250",
-        imageWidth: 450,
-        imageHeight: 250,
-        imageAlt: "Custom image",
-        html: `
-        <h3 style="font-size: 1.5em; margin-bottom: 8px;">Sorry!</h3>
-        <h4 style="font-size: 1.3em; margin-bottom: 6px;">Your mail could not be sent</h4>
-        <h5 style="font-size: 1em; margin-bottom: 8px;">Please try after some time</h5>
-        <h6 style="font-size: 0.8em; margin-bottom: 5px; color: green;">[MA-101]</h6>
-          `,
-        footer:
-          '<a style="color: blue;" href="#">Why do I have this issue?</a>',
-        confirmButtonText: "Continue",
+        position: "top-end",
+        icon: "success",
+        title: "Your mail has been sent",
+        showConfirmButton: false,
+        timer: 2000,
       });
-      //---------swal ends----------
-      // Need to exit the page. Force refresh the page
-      const router = useRouter();
-      router.reload();
+    } catch (err) {
+      console.error(err);
+      alert("Error, please try resubmitting the form");
     }
   }
 
@@ -99,7 +64,7 @@ export default function Contact() {
       <div className="relative flex place-items-center p-5 bg-white text-black">
         <Link href="/">Home</Link>
       </div>
-      <h2 className="text-2xl mt-10 text-red-500">Multiple To, CC and BCC Recepients</h2>
+      <h2 className="text-2xl mt-10">Multiple To, CC and BCC Recepients</h2>
       <form
         onSubmit={handleSubmit}
         className="mt-8 mb-2 w-80 max-w-screen-lg sm:w-96"
@@ -158,9 +123,9 @@ export default function Contact() {
             className="text-black"
           />
         </div>
-        <button className="rounded bg-blue-200 m- p-2" type="submit">
-            Send Mail(s)
-          </button>
+        <button className=" rounded bg-sky-400" type="submit">
+          Send Mail
+        </button>
       </form>
     </main>
   );

@@ -1,4 +1,4 @@
-/* This page.tsx file creates a form to accept multiple email addresses 
+/* This page.tsx file creates a form to accept only single email addresses 
 for the to, cc and bcc fields on the form. 
 NOTE: This version provides zod validation for all the form fields.
 */
@@ -7,9 +7,12 @@ import { FormEvent } from "react";
 import Link from "next/link";
 
 export default function Contact() {
+
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
+
     event.preventDefault();
     console.log("Submit button clicked");
+
     const formData = new FormData(event.currentTarget);
     try {
       console.log("Note: sendmail api call with POST method");
@@ -43,7 +46,7 @@ export default function Contact() {
       <div className="relative flex place-items-center p-5 bg-white text-black">
         <Link href="/">Home</Link>
       </div>
-      <h2 className="text-2xl mt-10">Zod verified</h2>
+      <h2 className="text-2xl mt-10 text-red-500">Zod verified</h2>
       <h2 className="text-1xl font-bold mt-2 text-red-500">
         Enter only one address in To, CC and BCC fields
       </h2>

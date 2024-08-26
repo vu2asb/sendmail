@@ -1,4 +1,4 @@
-// Use this api to send mail to multiple to, cc and bcc recepients
+// Use this api to send mail to only single to, cc and bcc recepients
 // using comma seperated addresses.
 // --------------------------------------------------------------------------
 // Place the following lines in .env.local folder
@@ -9,12 +9,9 @@
 // Field descriptions from https://nodemailer.com/message/
 // from: The email address of the sender. All email addresses can be
 // plain ‘sender@server.com’ or formatted '“Sender Name” sender@server.com
-// to: Comma separated list or an array of recipients email addresses that
-// will appear on the "To:"" field.
-// cc: Comma separated list or an array of recipients email addresses that will
-// appear on the "Cc:"" field
-// bcc: Comma separated list or an array of recipients email addresses that will
-// appear on the "Bcc:" field
+// to: recipients email addresses that will appear on the "To:"" field.
+// cc: recipients email addresses that will appear on the "Cc:"" field
+// bcc: recipients email addresses that will appear on the "Bcc:" field
 // subject: Text of the subject of the email
 // text: The plaintext version of the message as an Unicode string, Buffer,
 // Stream or an attachment-like object ({path: ‘/var/data/…'})

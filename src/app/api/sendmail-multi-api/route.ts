@@ -107,10 +107,16 @@ export async function POST(request: NextRequest, response: NextResponse) {
       // bcc: ["ijkl@gmail.com", "mnop@gmail.com"], // BCC recipients
     });
 
-    return NextResponse.json({ message: "Success: Email was sent" });
+    // return NextResponse.json({ message: "Success: Email was sent" });
+    return new NextResponse("Success: Email was sent", {
+      status: 200,
+    });
   } catch (error) {
     console.log(error);
-    NextResponse.json({ message: "Error: Couldn't send mail!" });
+    // NextResponse.json({ message: "Error: Couldn't send mail!" });
+    return new NextResponse("Error: Couldn't send mail!", {
+      status: 500,
+    });
   }
 
   return new NextResponse("Response of API POST request success", {
