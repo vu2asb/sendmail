@@ -3,8 +3,8 @@ import { GridLoader } from "react-spinners";
 
 const SpinnerUno = () => {
   return (
-    <div className="">
-        <GridLoader color="#fd3905"/>
+    <div className="bg-primary">
+        <GridLoader color="#fd3905"/> 
     </div>
   );
 };

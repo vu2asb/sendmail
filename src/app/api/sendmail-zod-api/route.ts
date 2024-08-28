@@ -73,8 +73,6 @@ export async function POST(request: NextRequest, response: NextResponse) {
       .trim()
       .min(2, "Recepients name must be at least 2 characters long"),
     zemail: z.string().trim().email("Invalid email format"),
-    zccemail: z.string().trim().email("Invalid email format").optional(),
-    zbccemail: z.string().trim().email("Invalid email format").optional(),
     zsubject: z
       .string()
       .trim()
@@ -83,23 +81,27 @@ export async function POST(request: NextRequest, response: NextResponse) {
       .string()
       .trim()
       .min(2, "Message must be at least 2 characters long"),
+
+    zccemail: z.string().trim().email("Invalid email format").optional(),
+    zbccemail: z.string().trim().email("Invalid email format").optional(),
   });
 
   // Parse the zod schema with the form input field values
   const result = userSchema.safeParse({
     zname: name,
     zemail: email,
-    zccemail: ccemail,
-    zbccemail: bccemail,
     zsubject: subject,
     zmessage: message,
+    zccemail: ccemail,
+    zbccemail: bccemail,
+
   });
 
   // If Zod fails
   if (!result.success) {
     // immediately terminate the function's execution and returns an error code/value
-    console.log("Zod validation failed");
-    return new NextResponse("Zod validation failed", {
+    console.log("Zod validation on api end failed");
+    return new NextResponse("Zod validation on api end failed", {
       status: 500,
     });
   }

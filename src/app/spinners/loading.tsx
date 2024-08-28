@@ -5,7 +5,7 @@ import Spinner from "@/components/Spinner-uno";
 
 const Loading = () => {
   return (
-    <div className="h-screen flex justify-center items-center bg-green-200">
+    <div className="h-screen flex justify-center items-center bg-primary">
       <SpinnerUno />
     </div>
   );

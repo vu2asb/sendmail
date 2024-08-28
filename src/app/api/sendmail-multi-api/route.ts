@@ -29,7 +29,7 @@ import { NextResponse, NextRequest } from "next/server";
 const nodemailer = require("nodemailer");
 
 // Handles POST requests to /api
-export async function POST(request: NextRequest, response: NextResponse) {
+export async function POST(request: Request, response: Response) {
   const username = process.env.NEXT_PUBLIC_EMAIL_USERNAME;
   const password = process.env.NEXT_PUBLIC_EMAIL_PASSWORD;
   const myEmail = process.env.NEXT_PUBLIC_PERSONAL_EMAIL;
@@ -48,10 +48,12 @@ export async function POST(request: NextRequest, response: NextResponse) {
   const formData = await request.formData();
   const name = formData.get("name");
   const email = formData.get("email");
-  const ccemail = formData.get("email_cc_recipient");
-  const bccemail = formData.get("email_bcc_recipient");
   const subject = formData.get("subject");
   const message = formData.get("message");
+  const ccemail = formData.get("email_cc_recipient");
+  const bccemail = formData.get("email_bcc_recipient");
+
+
 
   console.log(
     "Name: " +
@@ -107,14 +109,14 @@ export async function POST(request: NextRequest, response: NextResponse) {
       // bcc: ["ijkl@gmail.com", "mnop@gmail.com"], // BCC recipients
     });
 
-    // return NextResponse.json({ message: "Success: Email was sent" });
-    return new NextResponse("Success: Email was sent", {
+    console.log("Success: Email was sent");
+    return new Response("Success: Email was sent", {
       status: 200,
     });
   } catch (error) {
+    console.log("Error: Couldn't send mail!");
     console.log(error);
-    // NextResponse.json({ message: "Error: Couldn't send mail!" });
-    return new NextResponse("Error: Couldn't send mail!", {
+    return new Response("Error: Couldn't send mail!", {
       status: 500,
     });
   }

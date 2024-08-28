@@ -36,7 +36,7 @@ export default function Contact() {
       
     } catch (err) {
       console.error(err);
-      alert("Error, please try resubmitting the form");
+      alert("Error, please try resubmitting the form. Details: "+err+"");
     }
 
   }

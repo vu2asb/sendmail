@@ -1,20 +1,20 @@
-/* This page.tsx file creates a form to accept multiple email addresses 
-for the to, cc and bcc fields on the form. 
-NOTE: This version provides no validation of any of the form field.
-*/
+// 28-8-24 Working well
+
 "use client";
 import { FormEvent } from "react";
-import Link from "next/link";
 import Swal from "sweetalert2";
-import { useRouter } from "next/router";
+import Link from "next/link";
 
-export default function Contact() {
-  var debug = false; // true = show console.log messages; false don't show
+const Emailer = () => {
+  console.log("Hello World");
+
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     console.log("Submit button clicked");
     const formData = new FormData(event.currentTarget);
+
     try {
+      console.log("In Try block");
       console.log("Note: sendmail api call with POST method");
       const response = await fetch(
         "http://localhost:3000/api/sendmail-multi-api",
@@ -23,10 +23,25 @@ export default function Contact() {
           body: formData,
         }
       );
-      if (!response.ok) {
-        if (debug) {
-          alert("MA-100: API fetch call failed");
-        }
+      console.log(
+        "API Response status code: " +
+          response.status +
+          ", status text: " +
+          response.statusText +
+          ""
+      );
+
+      if (response.status == 200) {
+        console.log("Response status is 200; i.e. OK");
+        Swal.fire({
+          position: "top-end",
+          icon: "success",
+          title: "Your mail has been sent!",
+          showConfirmButton: false,
+          timer: 1500,
+        });
+      } else {
+        console.log("Response status is not 200");
         Swal.fire({
           title: "Oops...",
           imageUrl: "https://unsplash.it/450/250",
@@ -37,40 +52,16 @@ export default function Contact() {
           <h3 style="font-size: 1.5em; margin-bottom: 8px;">Sorry!</h3>
           <h4 style="font-size: 1.3em; margin-bottom: 6px;">Your mail could not be sent</h4>
           <h5 style="font-size: 1em; margin-bottom: 8px;">Please try after some time</h5>
-          <h6 style="font-size: 0.8em; margin-bottom: 5px; color: green;">[MA-100]</h6>
+          <h6 style="font-size: 0.8em; margin-bottom: 5px; color: green;">[MA-001]</h6>
             `,
           footer:
             '<a style="color: blue;" href="#">Why do I have this issue?</a>',
           confirmButtonText: "Continue",
         });
         //---------swal ends----------
-        // Need to exit the page. Force refresh the page
-        const router = useRouter();
-        router.reload();
-      } else {
-        const responseData = await response.json();
-        if (debug) {
-          alert("API fetch worked");
-          console.log("On success Response Data: ");
-          console.log(responseData["message"]);
-        }
-
-        Swal.fire({
-          position: "top-end",
-          icon: "success",
-          title: "Your mail has been sent",
-          showConfirmButton: false,
-          timer: 2000,
-        });
-        //---------swal ends----------
       }
     } catch (err) {
-      //fetch api failed
-      if (debug) {
-        console.error(err);
-        alert("MA-101: API fetch call failed. Reason/Details: " + err + "");
-      }
-
+      console.log("In Catch block; Error description: " + err + "");
       Swal.fire({
         title: "Oops...",
         imageUrl: "https://unsplash.it/450/250",
@@ -81,30 +72,30 @@ export default function Contact() {
         <h3 style="font-size: 1.5em; margin-bottom: 8px;">Sorry!</h3>
         <h4 style="font-size: 1.3em; margin-bottom: 6px;">Your mail could not be sent</h4>
         <h5 style="font-size: 1em; margin-bottom: 8px;">Please try after some time</h5>
-        <h6 style="font-size: 0.8em; margin-bottom: 5px; color: green;">[MA-101]</h6>
+        <h6 style="font-size: 0.8em; margin-bottom: 5px; color: green;">[MA-002]</h6>
           `,
         footer:
           '<a style="color: blue;" href="#">Why do I have this issue?</a>',
         confirmButtonText: "Continue",
       });
       //---------swal ends----------
-      // Need to exit the page. Force refresh the page
-      const router = useRouter();
-      router.reload();
     }
   }
 
   return (
     <main className="flex min-h-screen flex-col items-center">
-      <div className="relative flex place-items-center p-5 bg-white text-black">
+      <div className="relative flex place-items-center mt-10 p-8 bg-white text-black text-xl">
         <Link href="/">Home</Link>
       </div>
-      <h2 className="text-2xl mt-10 text-red-500">Multiple To, CC and BCC Recepients</h2>
+      <h2 className="text-2xl mt-5 text-red-500">
+        Multiple To, CC and BCC Recepients
+      </h2>
       <form
+        id="myForm"
         onSubmit={handleSubmit}
-        className="mt-8 mb-2 w-80 max-w-screen-lg sm:w-96"
+        className="flex flex-col justify-items-center items-center mt-2 mb-2 w-1/3"
       >
-        <div className="mb-4 flex flex-col w-500">
+        <div className="m-1 p-1 flex flex-col w-full">
           <label htmlFor="form-name">Name: </label>
           <input
             id="form-name"
@@ -114,7 +105,6 @@ export default function Contact() {
             name="name"
             className="text-black"
           />
-
           <label htmlFor="form-email"> Email (comma-separated):</label>
           <input
             id="form-email"
@@ -157,11 +147,13 @@ export default function Contact() {
             rows={1}
             className="text-black"
           />
-        </div>
-        <button className="rounded bg-blue-200 m- p-2" type="submit">
-            Send Mail(s)
+          <button className="rounded bg-blue-200 m- p-2" type="submit">
+            Send
           </button>
+        </div>
       </form>
     </main>
   );
-}
+};
+
+export default Emailer;
