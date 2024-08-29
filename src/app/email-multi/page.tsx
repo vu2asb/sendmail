@@ -1,16 +1,20 @@
-// 28-8-24 Working well
+// 29-8-24 Working well
 
 "use client";
 import { FormEvent } from "react";
 import Swal from "sweetalert2";
 import Link from "next/link";
-import SpinnerBeat from "@/components/Spinner-beat"; // import the spinner component
-import { useState } from "react"; // we will need this to mantain the loading state 
+import SpinnerPulse from "@/components/Spinner-pulse"; // import the spinner component
+import { useState } from "react"; // we will need this to mantain the loading state
 
 const Emailer = () => {
   console.log("Hello World");
   let [users, setUsers] = useState([null]);
   let [loading, setLoading] = useState(false);
+
+  const wait = async (ms: number) => {
+    return new Promise((resolve) => setTimeout(resolve, ms));
+  };
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -26,6 +30,8 @@ const Emailer = () => {
         {
           method: "POST",
           body: formData,
+          cache: "no-store", // This line added: Next.js 13 Caching and Revalidation
+          //https://www.youtube.com/watch?v=ztswJg7MYCs
         }
       );
       console.log(
@@ -45,8 +51,10 @@ const Emailer = () => {
           showConfirmButton: false,
           timer: 1500,
         });
-      } 
-      else {
+        // Need to reload the page now
+        await wait(3000);
+        window.location.reload();
+      } else {
         console.log("Response status is not 200");
         Swal.fire({
           title: "Oops...",
@@ -65,11 +73,13 @@ const Emailer = () => {
           confirmButtonText: "Continue",
         });
         //---------swal ends----------
+        // Need to reload the page now
+        await wait(10000);
+        window.location.reload();
       }
       setLoading(false); // Set loading to false to stop showing the spinner
-    } 
-    
-    catch (err) {
+      // alert("Press any key to continue");
+    } catch (err) {
       console.log("In Catch block; Error description: " + err + "");
       Swal.fire({
         title: "Oops...",
@@ -88,6 +98,9 @@ const Emailer = () => {
         confirmButtonText: "Continue",
       });
       //---------swal ends----------
+      // Need to reload the page now
+      await wait(10000);
+      window.location.reload();
     }
   }
 
@@ -161,10 +174,10 @@ const Emailer = () => {
           </button>
         </div>
       </form>
-            {/* Check whether API is loading */}
-            {loading && (
+      {/* Check whether API is loading */}
+      {loading && (
         <div className="bg-blue-400  rounded-md p-20 absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
-          <SpinnerBeat />
+          <SpinnerPulse />
         </div>
       )}
     </main>
