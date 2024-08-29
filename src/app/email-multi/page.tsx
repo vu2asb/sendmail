@@ -4,14 +4,19 @@
 import { FormEvent } from "react";
 import Swal from "sweetalert2";
 import Link from "next/link";
+import SpinnerBeat from "@/components/Spinner-beat"; // import the spinner component
+import { useState } from "react"; // we will need this to mantain the loading state 
 
 const Emailer = () => {
   console.log("Hello World");
+  let [users, setUsers] = useState([null]);
+  let [loading, setLoading] = useState(false);
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     console.log("Submit button clicked");
     const formData = new FormData(event.currentTarget);
+    setLoading(true); // Set loading to true to start showing the spinner
 
     try {
       console.log("In Try block");
@@ -40,7 +45,8 @@ const Emailer = () => {
           showConfirmButton: false,
           timer: 1500,
         });
-      } else {
+      } 
+      else {
         console.log("Response status is not 200");
         Swal.fire({
           title: "Oops...",
@@ -60,7 +66,10 @@ const Emailer = () => {
         });
         //---------swal ends----------
       }
-    } catch (err) {
+      setLoading(false); // Set loading to false to stop showing the spinner
+    } 
+    
+    catch (err) {
       console.log("In Catch block; Error description: " + err + "");
       Swal.fire({
         title: "Oops...",
@@ -152,6 +161,12 @@ const Emailer = () => {
           </button>
         </div>
       </form>
+            {/* Check whether API is loading */}
+            {loading && (
+        <div className="bg-blue-400  rounded-md p-20 absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
+          <SpinnerBeat />
+        </div>
+      )}
     </main>
   );
 };
